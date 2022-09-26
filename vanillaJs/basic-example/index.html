@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vyking Sneaker Window</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <script defer>
+      const configUri = "/assets/config/modeld.bin";
+      window.configKey = "io.vyking";
+
+      function setupConfig(uri) {
+        return fetch(encodeURI(uri), {
+          method: "GET",
+          cache: "no-cache",
+        }).then(function (response) {
+          if (!response.ok) {
+            throw new Error(
+              `Failed to load configuration from ${uri}. Status: ${response.status}`
+            );
+          }
+          // returning ready promise to be used later
+          return response.arrayBuffer();
+        });
+      }
+
+      window.loadVykingConfig = setupConfig(configUri);
+    </script>
+    <style>
+      :root {
+        --catalogue-figure-opacity: 50%;
+      }
+
+      html,
+      body {
+        background-color: white;
+        height: 100%;
+        margin: 0px;
+        overflow: hidden;
+        padding: 0px;
+      }
+
+      #loader-image {
+        height: 32px;
+        left: 50%;
+        margin-top: -16px;
+        margin-left: -16px;
+        position: absolute;
+        top: 50%;
+        visibility: hidden;
+        width: 32px;
+        z-index: 2;
+      }
+
+      .custom-shoe {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        left: 0;
+        position: fixed;
+        z-index: 10;
+        height: 40px;
+        margin-top: 15px;
+        top: 0;
+        width: 100%;
+      }
+
+      .custom-shoe input {
+        font-size: large;
+        width: 60%;
+      }
+
+      .custom-shoe button {
+        margin-left: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      .feature {
+        height: 100%;
+        margin: auto;
+        padding: 0px;
+        width: 100%;
+      }
+
+      .feature #instructions {
+        font-weight: bold;
+        text-align: center;
+        padding: 70px 0;
+      }
+
+      .feature #vyking-sneaker-window-wrapper {
+        background-color: rgba(255, 255, 255, 0.8);
+        height: 100%;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        transition: 0.5s;
+        width: 100%;
+        z-index: 1;
+      }
+
+      @media screen and (orientation: portrait) and (min-width: 680px) and (min-height: 800px) {
+        .feature {
+          height: 640px;
+          margin-top: 60px;
+          position: relative;
+          width: 360px;
+        }
+      }
+
+      @media screen and (orientation: landscape) and (min-width: 680px) and (min-height: 520px) {
+        .feature {
+          height: 360px;
+          margin-top: 60px;
+          position: relative;
+          width: 640px;
+        }
+      }
+
+      .vyking-sneaker-window-contents {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+      }
+
+      .vyking-sneaker-window-contents #vyking-sneaker-window {
+        border: 0px;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+      }
+
+      .vyking-sneaker-window-contents .photobtn {
+        height: 50px;
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        width: 50px;
+        visibility: hidden;
+      }
+
+      .catalogue {
+        bottom: 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        margin-bottom: 12px;
+        margin-left: 12px;
+        overflow-x: auto;
+        position: absolute;
+        width: 100%;
+      }
+
+      .catalogue figure {
+        margin: auto;
+        padding: 5px;
+        text-align: center;
+        /* text-transform: uppercase; */
+        width: 100px;
+      }
+
+      .catalogue figure img {
+        opacity: var(--catalogue-figure-opacity);
+        width: 100px;
+      }
+
+      .custom-triggers {
+        margin-top: 8px;
+      }
+
+      @media screen and (orientation: portrait) and (min-width: 680px) and (min-height: 800px) {
+        .custom-triggers {
+          margin-top: 0;
+        }
+      }
+
+      @media screen and (orientation: landscape) and (min-width: 680px) and (min-height: 520px) {
+        .custom-triggers {
+          margin-top: 0;
+        }
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="loader-image">
+      <img src="/assets/images/loader.gif" alt="Loading..." />
+    </div>
+
+    <section class="custom-shoe">
+      <input
+        id="custom-shoe-input"
+        type="url"
+        value="https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/coach_citysole/offsets.json"
+      />
+      <button type="button" id="replace-accessories-btn">Change Shoes</button>
+      <div class="custom-triggers">
+        <button id="play" disabled>PLAY</button>
+        <button id="pause" disabled>PAUSE</button>
+      </div>
+    </section>
+
+    <section class="feature">
+      <h1 id="instructions">
+        Please click on a shoe and point the camera at your feet
+      </h1>
+
+      <div id="vyking-sneaker-window-wrapper"></div>
+    </section>
+
+    <section class="catalogue" id="the-catalogue">
+      <figure>
+        <img
+          onclick="replaceAccessories('https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/yeezy_boost_700_carbon_blue/offsets.json')"
+          src="https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/yeezy_boost_700_carbon_blue/shoeIcon.png"
+        />
+        <figcaption>Carbon Blue</figcaption>
+      </figure>
+      <figure>
+        <img
+          onclick="replaceAccessories('https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/air_jordan_1_turbo_green/offsets.json')"
+          src="https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/air_jordan_1_turbo_green/shoeIcon.png"
+        />
+        <figcaption>Air Jordan 1</figcaption>
+      </figure>
+      <figure>
+        <img
+          onclick="replaceAccessories('https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/jordan_off_white_chicago/offsets.json')"
+          src="https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/jordan_off_white_chicago/shoeIcon.png"
+        />
+        <figcaption>Off-White</figcaption>
+      </figure>
+    </section>
+
+    <template id="vyking-sneaker-window-template">
+      <div class="vyking-sneaker-window-contents">
+        <img
+          id="takePhoto"
+          class="photobtn"
+          src="/assets/images/takePhoto.png"
+          alt="Take a photo"
+          title="Image from freeiconspng.com"
+        />
+        <iframe
+          id="vyking-sneaker-window"
+          title="Vyking Sneakerkit Window"
+          allow="camera"
+        >
+          Try-on with webcam
+        </iframe>
+      </div>
+    </template>
+
+    <template id="catalogue-entry-template">
+      <figure>
+        <img id="catalogue-entry-template-image" />
+        <figcaption id="catalogue-entry-template-caption"></figcaption>
+      </figure>
+    </template>
+
+    <script>
+      const targetOrigin = "https://d1ux9mupljc68q.cloudfront.net";
+      const targetPath = "/1/index.html";
+      const baseVykingSneakerWindowTemplate = document.querySelector(
+        "#vyking-sneaker-window-template"
+      );
+      const initialAccessoryUrl = "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/coach_citysole/offsets.json"
+
+      let iframe = null;
+      let wrapper = document.querySelector("#vyking-sneaker-window-wrapper");
+      let isReady = false;
+      let selectedAccessories =
+        "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/yeezy_boost_700_carbon_blue/offsets.json";
+      let showLoaderCount = 0;
+      let vykingConfig = null;
+
+      const customShoeInput = document.querySelector("#custom-shoe-input");
+      const replaceAccessoriesBtn = document.querySelector(
+        "#replace-accessories-btn"
+      );
+
+      const playBtn = document.querySelector("#play");
+      const pauseBtn = document.querySelector("#pause");
+
+      playBtn.addEventListener("click", function () {
+        play();
+      });
+
+      pauseBtn.addEventListener("click", function () {
+        pause();
+      });
+
+      replaceAccessoriesBtn.addEventListener("click", function () {
+        replaceAccessories(customShoeInput.value);
+      });
+
+      const replaceAccessories = function (uri) {
+        console.log(`replaceAccessories ${isReady}`);
+        selectedAccessories = uri;
+
+        if (isReady) {
+          showLoader();
+          const vykingSneakerWindow = document.querySelector(
+            "#vyking-sneaker-window"
+          );
+          if (vykingSneakerWindow !== null) {
+            vykingSneakerWindow.contentWindow.postMessage(
+              {
+                type: "VYKING_SNEAKER_WINDOW_REPLACE_ACCESSORIES",
+                accessoryDescriptionUrl: uri,
+              },
+              targetOrigin
+            );
+          }
+        }
+      };
+
+      function showLoader() {
+        if (++showLoaderCount > 0) {
+          document.querySelector("#loader-image").style.visibility = "visible";
+        }
+      }
+      function hideLoader() {
+        if (--showLoaderCount <= 0) {
+          showLoaderCount = 0;
+          document.querySelector("#loader-image").style.visibility = "hidden";
+        }
+      }
+
+      function play() {
+        const vykingSneakerWindow = document.querySelector(
+          "#vyking-sneaker-window"
+        );
+
+        if (vykingSneakerWindow !== null) {
+          vykingSneakerWindow.contentWindow.postMessage(
+            {
+              type: "VYKING_SNEAKER_WINDOW_PLAY",
+            },
+            targetOrigin
+          );
+        }
+      }
+
+      function pause() {
+        const vykingSneakerWindow = document.querySelector(
+          "#vyking-sneaker-window"
+        );
+
+        if (vykingSneakerWindow !== null) {
+          vykingSneakerWindow.contentWindow.postMessage(
+            {
+              type: "VYKING_SNEAKER_WINDOW_PAUSE",
+            },
+            targetOrigin
+          );
+        }
+      }
+
+      function takePhoto() {
+        const vykingSneakerWindow = document.querySelector(
+          "#vyking-sneaker-window"
+        );
+
+        if (vykingSneakerWindow !== null) {
+          vykingSneakerWindow.contentWindow.postMessage(
+            {
+              type: "VYKING_SNEAKER_WINDOW_TAKE_PHOTO",
+              toDataURL: {
+                type: "image/jpeg",
+                encoderOptions: 0.5,
+              },
+            },
+            targetOrigin
+          );
+        }
+      }
+
+      function messageEventHandler(event) {
+        const eventData = event.data;
+        const eventType = eventData && event.data.type;
+
+        switch (eventType) {
+          case "VYKING_SNEAKER_WINDOW_WAITING_FOR_CONFIG":
+            hideLoader();
+            postInitialConfig(window.innerWidth, window.innerHeight);
+            showLoader();
+            break;
+          // Information message indicating licence expiry time
+          case "VYKING_SNEAKER_WINDOW_EXPIRY_TIME":
+            console.info(
+              `Licence expiry date: ${eventData.expiryTime.toString()}`
+            );
+            //If close to licencse expiry reload the configuration file ready for next time
+            if (
+              eventData.expiryTime.getTime() - new Date().getTime() <
+              1 * 24 * 60 * 60 * 1000
+            ) {
+              alert(`Expiry date: ${eventData.expiryTime.toString()}`);
+              fetch(configUri, {
+                method: "GET",
+                cache: "reload",
+              });
+            }
+            break;
+          // VykingSneakerWindow is now running and isReady for instructions
+          case "VYKING_SNEAKER_WINDOW_READY":
+            hideLoader();
+            isReady = true;
+
+            document.querySelector("#play").disabled = false;
+            document.querySelector("#pause").disabled = false;
+
+            const takePhotoBtn = document.querySelector("#takePhoto");
+
+            takePhotoBtn.addEventListener("click", takePhoto);
+            takePhotoBtn.style.visibility = "visible";
+
+            break;
+          // Accessory replacement is complete
+          case "VYKING_SNEAKER_WINDOW_REPLACE_ACCESSORIES":
+            if (eventData.complete === 1) {
+              hideLoader();
+            }
+            break;
+
+          case "VYKING_SNEAKER_WINDOW_ARE_FEET_DETECTED":
+            console.log(`Are feet detected: ${eventData.value}`);
+            break;
+
+          case "VYKING_SNEAKER_WINDOW_TAKE_PHOTO":
+            const takePhotoButton = document.querySelector("#takePhoto");
+            const clone = takePhotoButton.cloneNode(false);
+
+            takePhotoButton.removeEventListener("click", takePhoto);
+            takePhotoButton.src = eventData.value.dataURL;
+            takePhotoButton.style.width = `${eventData.value.width / 4}px`;
+            takePhotoButton.style.height = `${eventData.value.height / 4}px`;
+
+            setTimeout(function () {
+              takePhotoButton.src = clone.src;
+              takePhotoButton.addEventListener("click", takePhoto);
+              takePhotoButton.style.width = clone.style.width;
+              takePhotoButton.style.height = clone.style.height;
+            }, 3000);
+            break;
+
+          case "VYKING_SNEAKER_WINDOW_BUSY_ERROR":
+            hideLoader();
+            break;
+
+          // An error has occurred
+          case "VYKING_SNEAKER_WINDOW_ERROR":
+            hideLoader();
+            alert(`${eventData.requestType} ${eventData.value}`);
+            break;
+        }
+      }
+
+      function postInitialConfig(clientWidth, clientHeight) {
+        let cameraWidth = 360;
+        let cameraHeight = 640;
+        if (clientWidth > clientHeight) {
+          cameraWidth = 640;
+          cameraHeight = 360;
+        }
+
+        const sneakerWindow = document.querySelector("#vyking-sneaker-window");
+
+        if (sneakerWindow !== null) {
+          sneakerWindow.contentWindow.postMessage(
+            {
+              type: "VYKING_SNEAKER_WINDOW_CONFIG",
+              config: vykingConfig,
+              key: window.configKey,
+              cameraWidth: cameraWidth,
+              cameraHeight: cameraHeight,
+              autoPlay: true,
+              accessoryDescriptionUrl: initialAccessoryUrl
+            },
+            targetOrigin
+          );
+        }
+      }
+
+      function main() {
+        const vykingSneakerWindowWrapper = document.querySelector(
+          "#vyking-sneaker-window-wrapper"
+        );
+        const templateClone = document
+          .querySelector("#vyking-sneaker-window-template")
+          .cloneNode(true);
+        const iframe = templateClone.content.querySelector(
+          "#vyking-sneaker-window"
+        );
+        const targetUri = targetOrigin + targetPath;
+
+        iframe.name = Date.now();
+        iframe.src = encodeURI(targetUri);
+
+        const child = vykingSneakerWindowWrapper.firstElementChild;
+
+        // checking if there is a previous version running, in case yes it gets removed
+        if (child !== null) {
+          wrapper.removeChild(child);
+        }
+
+        vykingSneakerWindowWrapper.appendChild(templateClone.content);
+
+        window.addEventListener("message", messageEventHandler);
+      }
+
+      window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+          window.removeEventListener("message", messageEventHandler);
+          vykingConfig = null;
+          const wrapper = document.querySelector(
+            "#vyking-sneaker-window-wrapper"
+          );
+
+          // removing the template previously loaded that contains the previous iframe window
+          if (wrapper !== null) {
+            const child = wrapper.firstElementChild;
+
+            if (child !== null) {
+              wrapper.removeChild(child);
+            }
+            isReady = false;
+
+            // reloading the config
+            window.loadVykingConfig
+              .then(function (config) {
+                vykingConfig = config;
+                main();
+              })
+              .catch(function (error) {
+                alert(error);
+              });
+          }
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", function () {
+        window.loadVykingConfig
+          .then(function (config) {
+            vykingConfig = config;
+            main();
+          })
+          .catch(function (error) {
+            alert(error);
+          });
+      });
+    </script>
+  </body>
+</html>

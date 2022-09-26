@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "Graphik";
+  src: url("./fonts/Graphik-Regular-App.woff") format("woff");
+}
+
+@font-face {
+  font-family: "GraphikBold";
+  src: url("./fonts/Graphik-Bold-App.woff") format("woff");
+}
+
+body {
+  background-color: #232323;
+
+  margin: 0;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  -webkit-text-size-adjust: 100%;
+
+  scrollbar-width: none;
+  position: fixed;
+}
+
+

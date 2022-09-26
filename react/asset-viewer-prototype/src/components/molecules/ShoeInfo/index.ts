@@ -1,0 +1,1 @@
+export { ShoeInfo } from "./ShoeInfo";
