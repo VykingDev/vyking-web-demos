@@ -2,7 +2,7 @@
   "name": "asset-viewer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://asset-viewer-prototype.vyking.io/",
+  "homepage": "https://web-demo.vyking.io/",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",

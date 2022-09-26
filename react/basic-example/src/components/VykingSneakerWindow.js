@@ -4,7 +4,7 @@ import Catalogue from "./Catalogue";
 import "./VykingSneakerWindow.css";
 
 function VykingSneakerWindow({ config, targetOrigin, targetPath }) {
-  const initialAccessoryUrl = "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/coach_citysole/offsets.json"
+  const initialAccessoryUrl = "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/yeezy_boost_700_carbon_blue/offsets.json"
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isShowingPreview, setShowingPreview] = useState(false);

@@ -3,7 +3,7 @@ import "./CameraActions.css";
 
 function CameraActions({ onReplaceAccessories, onPlay, onPause, isReady }) {
   const [accessoryUrl, setAccessoryUrl] = useState(
-    "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/coach_citysole/offsets.json"
+    "https://vykingsneakerkitnative.s3.amazonaws.com/SneakerStudio/may_android_ios/yeezy_boost_700_carbon_blue/offsets.json"
   );
 
   return (
