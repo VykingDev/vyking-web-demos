@@ -32,7 +32,7 @@ export const GenerateShoeImage = async ({
       const canvasBlob = await fetch(canvasString).then((res) => res.blob());
 
       const customImageFile = new File([canvasBlob], "sneakers.jpg", {
-        type: "image/jpeg ",
+        type: "image/jpeg",
       });
 
       if (
